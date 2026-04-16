@@ -1,38 +1,53 @@
-import psycopg2
-from dotenv import load_dotenv
-import os
+import streamlit as st
+from sqlalchemy import text
 
-load_dotenv()
-p_word = os.getenv("DB_PWORD")
+# Initialize connection.
+conn = st.connection("postgresql", type="sql")
 
-try:
-    connection = psycopg2.connect(
-        host="localhost",          
-        port="5432",             
-        database="dsci_551_project",
-        user="postgres",
-        password=p_word
+st.set_page_config(
+    page_title="Workout Tracker",
+    layout="wide",
+)
+
+def main():
+    st.title("Workout Tracker")
+    st.write("Welcome to the Workout Tracker app! Here you can log your exercises and track your progress over time.")
+    # Sidebar navigation
+    page = st.sidebar.radio(
+        "Go to",
+        ["Log Workout", "View Exercise Progress", "New Exercise"],
+        index=0,
     )
-    print("Connection established successfully!")
 
-except psycopg2.OperationalError as e:
-    print(f"Unable to connect to the database: {e}")
-
+    if page == "New Exercise":
+        new_exercise()
+    elif page == "View Exercise Progress":
+        view_exercise_progress()
+    else:
+        log_workout()
 
 def new_exercise():
-    exercise = input('What would you like to name the new exercise? ')
-    stop = False
-    while stop == False:
-        desc_toggle = input('Would you like to create a description? (Y/N) ')
-        if desc_toggle.upper() == 'N':
-            desc = None
-            stop = True
-        elif desc_toggle.upper() == 'Y':
-            desc = input('Type a short description: ')
-            stop = True
-        else:
-            print(f'Invalid input: {desc_toggle}')
-    return [exercise, desc]
+    exercise = st.text_input('What would you like to name the new exercise? ', max_chars=30)
+    desc_toggle = st.radio('Would you like to create a description?', ['Yes', 'No'], index=1)
+    desc = None
+    if desc_toggle == 'Yes':
+        desc = st.text_input('Type a short description: ')
+    if st.button('Submit'):
+        try:
+            with conn.session as session:
+                query = text("INSERT INTO exercises (name, description) VALUES (:exercise, :desc)")
+                session.execute(query, {"exercise": exercise, "desc": desc})
+                session.commit()
+            st.success(f'Exercise {exercise} added to database!')
+            #new_exercise()
+        except Exception as e:
+            st.error(f'Error adding exercise: {e}')
 
+def view_exercise_progress():
+    st.write("This feature is coming soon! Stay tuned for updates.")
 
-print(new_exercise())
+def log_workout():
+    st.write("This feature is coming soon! Stay tuned for updates.")
+
+if __name__ == "__main__":
+    main()
