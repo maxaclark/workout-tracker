@@ -7,6 +7,7 @@
 - Postgres/pgAdmin4 downloaded locally
 - Import workout_tracker_schema.sql in pgAdmin4
 - Fill .streamlit/sectrets.toml.example with local credentials and publish as streamlit/secrets.toml
+    - Default username is "postgres"
 
 ---
 
