@@ -5,10 +5,12 @@
 - **pip**
 - Local clone of this repository
 - Postgres/pgAdmin4 downloaded locally
+- Import workout_tracker_schema.sql in pgAdmin4
+- Fill streamlit/sectrets.toml.example with local credentials and publish as streamlit/secrets.toml
 
 ---
 
-## Quickstart
+## App Quickstart
 
 ### 1) Create a virtual environment (optional)
 **macOS / Linux**
