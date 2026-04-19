@@ -1,12 +1,10 @@
 # workout-tracker
 
-# workout-tracker
-
 ## Requirements
 - **Python** 3.8+
 - **pip**
 - Local clone of this repository
-- `data/vgsales_clean.csv` available locally (see structure above)
+- Postgres/pgAdmin4 downloaded locally
 
 ---
 
