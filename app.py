@@ -87,6 +87,17 @@ def view_exercise_progress():
                 WHERE ei.exercise_id = :exercise_id
                 ORDER BY w.date
             """)
+            explain = text("""
+                EXPLAIN ANALYZE
+                SELECT w.date, w.id AS workout_id, ei.weight_lbs, ei.weight_kg, ei.reps
+                FROM exercise_instances ei
+                JOIN workouts w ON ei.workout_id = w.id
+                WHERE ei.exercise_id = :exercise_id
+                ORDER BY w.date
+            """)
+            explanation = session.execute(explain, {"exercise_id": exercise_id}).fetchall()
+            st.write("Query Plan:")
+            st.write(explanation)
             result = session.execute(query, {"exercise_id": exercise_id}).fetchall()
     except Exception as e:
         st.error(f'Error fetching exercise data: {e}')
